@@ -11,11 +11,28 @@ extern "C" {
 #define BUFFER_LENGTH 300
 extern char *endMsg;
 
+typedef struct lopticka {
+    int posX;
+    int posY;
+} LOPTICKA;
+
+typedef struct hrac {
+    int posY;
+    int body;
+} HRAC;
+
+typedef struct dataPong {
+    LOPTICKA lopticka;
+    HRAC server;
+    HRAC klient;
+} DATAPONG;
+
 typedef struct data {
     char userName[USER_LENGTH + 1];
     pthread_mutex_t mutex;
     int socket;
     int stop;
+    DATAPONG* datapong;
 } DATA;
 
 void data_init(DATA *data, const char* userName, const int socket);

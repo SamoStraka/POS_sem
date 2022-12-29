@@ -14,6 +14,14 @@ void data_init(DATA *data, const char* userName, const int socket) {
 	data->socket = socket;
 	data->stop = 0;
 	data->userName[USER_LENGTH] = '\0';
+
+    data->datapong->lopticka.posX = 0;
+    data->datapong->lopticka.posY = 0;
+    data->datapong->server.posY = 0;
+    data->datapong->server.body = 0;
+    data->datapong->klient.posY = 0;
+    data->datapong->klient.body = 0;
+
 	strncpy(data->userName, userName, USER_LENGTH);
 	pthread_mutex_init(&data->mutex, NULL);
 }
