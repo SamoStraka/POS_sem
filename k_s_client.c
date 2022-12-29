@@ -1,4 +1,4 @@
-#include "k_s_client.h"
+xxx#include "k_s_client.h"
 #include "k_s_definitions.h"
 
 #include <stdio.h>
@@ -41,28 +41,22 @@ int klient_main(int argc, char *argv[]) {
     if (connect(sock,(struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
         printError("Chyba - connect.");        
     }
-    
-    printf("Spojenie so serverom bolo nadviazane.\n");
-    char buffer[BUFFER_LENGTH + 1];
-    buffer[BUFFER_LENGTH] = '\0';
-    int koniec = 0;
-    while (!koniec) {
-        fgets(buffer, BUFFER_LENGTH, stdin);
-        char* pos = strchr(buffer, '\n');
-        if (pos != NULL) {
-            *pos = '\0';
-        }
-        //zapis dat do socketu <unistd.h>
-		write(sock, buffer, strlen(buffer) + 1);
-        if (strcmp(buffer, endMsg) != 0) {
-            //citanie dat zo socketu <unistd.h>
-			read(sock, buffer, BUFFER_LENGTH);
-            printf("Server poslal nasledujuce data:\n%s\n", buffer);
-        }
-        else {
-            koniec = 1;
-        }
-    }
+
+    /inicializacia dat zdielanych medzi vlaknami
+    DATA data;
+    data_init(&data, userName, sock);
+
+    //vytvorenie vlakna pre zapisovanie dat do socketu <pthread.h>
+    pthread_t thread;
+    pthread_create(&thread, NULL, data_writeData, (void *)&data);
+
+    //v hlavnom vlakne sa bude vykonavat citanie dat zo socketu
+    data_readData((void *)&data);
+
+    //pockame na skoncenie zapisovacieho vlakna <pthread.h>
+    pthread_join(thread, NULL);
+    data_destroy(&data);
+
     //uzavretie socketu <unistd.h>
     close(sock);
     printf("Spojenie so serverom bolo ukoncene.\n");

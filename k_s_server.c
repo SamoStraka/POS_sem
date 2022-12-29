@@ -10,20 +10,6 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-static char* spracujData(char *data) {
-    char *akt = data;
-    while (*akt != '\0') {
-        if (islower(*akt)) {
-            *akt = toupper(*akt);
-        }
-        else if (isupper(*akt)) {
-            *akt = tolower(*akt);
-        } 
-		akt++;		
-    }
-    return data;
-}
-
 int server_main(int argc, char** argv) {
     if (argc < 1) {
         printError("Sever je nutne spustit s nasledujucimi argumentmi: port.");
@@ -63,26 +49,22 @@ int server_main(int argc, char** argv) {
     if (clientSocket < 0) {
         printError("Chyba - accept.");        
     }
-	
-    printf("Klient sa pripojil na server.\n");
-    char buffer[BUFFER_LENGTH + 1];
-    buffer[BUFFER_LENGTH] = '\0';
-    int koniec = 0;
-    while (!koniec) {
-        //citanie dat zo socketu <unistd.h>
-		read(clientSocket, buffer, BUFFER_LENGTH);
-        if (strcmp(buffer, endMsg) != 0) {
-            printf("Klient poslal nasledujuce data:\n%s\n", buffer);
-            spracujData(buffer);
-			//zapis dat do socketu <unistd.h>
-			write(clientSocket, buffer, strlen(buffer) + 1);
-        }
-        else {
-            koniec = 1;
-        }
-    }
-    printf("Klient ukoncil komunikaciu.\n");
-    
+
+    //inicializacia dat zdielanych medzi vlaknami
+    DATA data;
+    data_init(&data, userName, clientSocket);
+
+    //vytvorenie vlakna pre zapisovanie dat do socketu <pthread.h>
+    pthread_t thread;
+    pthread_create(&thread, NULL, data_writeData, (void *)&data);
+
+    //v hlavnom vlakne sa bude vykonavat citanie dat zo socketu
+    data_readData((void *)&data);
+
+    //pockame na skoncenie zapisovacieho vlakna <pthread.h>
+    pthread_join(thread, NULL);
+    data_destroy(&data);
+
     //uzavretie socketu klienta <unistd.h>
     close(clientSocket);
     
