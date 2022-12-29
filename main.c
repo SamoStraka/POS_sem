@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <string.h>
-#include "k_s_server.h"
-#include "k_s_client.h"
+#include "k_a_t_server.h"
+#include "k_a_t_client.h"
 
 int main(int argc, char** argv) {
     if(argc < 2){

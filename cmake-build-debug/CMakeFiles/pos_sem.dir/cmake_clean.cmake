@@ -1,4 +1,7 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/pos_sem.dir/k_a_t_client.c.o"
+  "CMakeFiles/pos_sem.dir/k_a_t_definitions.c.o"
+  "CMakeFiles/pos_sem.dir/k_a_t_server.c.o"
   "CMakeFiles/pos_sem.dir/main.c.o"
   "pos_sem"
   "pos_sem.pdb"

@@ -67,10 +67,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /tmp/tmp.XUSvGATrZz
+CMAKE_SOURCE_DIR = /tmp/tmp.Nt5AxrMpRD
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /tmp/tmp.XUSvGATrZz/cmake-build-debug
+CMAKE_BINARY_DIR = /tmp/tmp.Nt5AxrMpRD/cmake-build-debug
 
 #=============================================================================
 # Targets provided globally by CMake.
@@ -99,9 +99,9 @@ edit_cache/fast: edit_cache
 
 # The main all target
 all: cmake_check_build_system
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/tmp.XUSvGATrZz/cmake-build-debug/CMakeFiles /tmp/tmp.XUSvGATrZz/cmake-build-debug//CMakeFiles/progress.marks
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/tmp.Nt5AxrMpRD/cmake-build-debug/CMakeFiles /tmp/tmp.Nt5AxrMpRD/cmake-build-debug//CMakeFiles/progress.marks
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 all
-	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/tmp.XUSvGATrZz/cmake-build-debug/CMakeFiles 0
+	$(CMAKE_COMMAND) -E cmake_progress_start /tmp/tmp.Nt5AxrMpRD/cmake-build-debug/CMakeFiles 0
 .PHONY : all
 
 # The main clean target
@@ -142,6 +142,87 @@ pos_sem/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/build
 .PHONY : pos_sem/fast
 
+k_a_t_client.o: k_a_t_client.c.o
+
+.PHONY : k_a_t_client.o
+
+# target to build an object file
+k_a_t_client.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/k_a_t_client.c.o
+.PHONY : k_a_t_client.c.o
+
+k_a_t_client.i: k_a_t_client.c.i
+
+.PHONY : k_a_t_client.i
+
+# target to preprocess a source file
+k_a_t_client.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/k_a_t_client.c.i
+.PHONY : k_a_t_client.c.i
+
+k_a_t_client.s: k_a_t_client.c.s
+
+.PHONY : k_a_t_client.s
+
+# target to generate assembly for a file
+k_a_t_client.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/k_a_t_client.c.s
+.PHONY : k_a_t_client.c.s
+
+k_a_t_definitions.o: k_a_t_definitions.c.o
+
+.PHONY : k_a_t_definitions.o
+
+# target to build an object file
+k_a_t_definitions.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/k_a_t_definitions.c.o
+.PHONY : k_a_t_definitions.c.o
+
+k_a_t_definitions.i: k_a_t_definitions.c.i
+
+.PHONY : k_a_t_definitions.i
+
+# target to preprocess a source file
+k_a_t_definitions.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/k_a_t_definitions.c.i
+.PHONY : k_a_t_definitions.c.i
+
+k_a_t_definitions.s: k_a_t_definitions.c.s
+
+.PHONY : k_a_t_definitions.s
+
+# target to generate assembly for a file
+k_a_t_definitions.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/k_a_t_definitions.c.s
+.PHONY : k_a_t_definitions.c.s
+
+k_a_t_server.o: k_a_t_server.c.o
+
+.PHONY : k_a_t_server.o
+
+# target to build an object file
+k_a_t_server.c.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/k_a_t_server.c.o
+.PHONY : k_a_t_server.c.o
+
+k_a_t_server.i: k_a_t_server.c.i
+
+.PHONY : k_a_t_server.i
+
+# target to preprocess a source file
+k_a_t_server.c.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/k_a_t_server.c.i
+.PHONY : k_a_t_server.c.i
+
+k_a_t_server.s: k_a_t_server.c.s
+
+.PHONY : k_a_t_server.s
+
+# target to generate assembly for a file
+k_a_t_server.c.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/pos_sem.dir/build.make CMakeFiles/pos_sem.dir/k_a_t_server.c.s
+.PHONY : k_a_t_server.c.s
+
 main.o: main.c.o
 
 .PHONY : main.o
@@ -178,6 +259,15 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... pos_sem"
+	@echo "... k_a_t_client.o"
+	@echo "... k_a_t_client.i"
+	@echo "... k_a_t_client.s"
+	@echo "... k_a_t_definitions.o"
+	@echo "... k_a_t_definitions.i"
+	@echo "... k_a_t_definitions.s"
+	@echo "... k_a_t_server.o"
+	@echo "... k_a_t_server.i"
+	@echo "... k_a_t_server.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

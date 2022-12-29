@@ -62,10 +62,10 @@ RM = /usr/bin/cmake -E rm -f
 EQUALS = =
 
 # The top-level source directory on which CMake was run.
-CMAKE_SOURCE_DIR = /tmp/tmp.KsxX6Zwsat
+CMAKE_SOURCE_DIR = /tmp/tmp.Nt5AxrMpRD
 
 # The top-level build directory on which CMake was run.
-CMAKE_BINARY_DIR = /tmp/tmp.KsxX6Zwsat/cmake-build-debug
+CMAKE_BINARY_DIR = /tmp/tmp.Nt5AxrMpRD/cmake-build-debug
 
 # Include any dependencies generated for this target.
 include CMakeFiles/pos_sem.dir/depend.make
@@ -78,28 +78,73 @@ include CMakeFiles/pos_sem.dir/flags.make
 
 CMakeFiles/pos_sem.dir/main.c.o: CMakeFiles/pos_sem.dir/flags.make
 CMakeFiles/pos_sem.dir/main.c.o: ../main.c
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.KsxX6Zwsat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/pos_sem.dir/main.c.o"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/pos_sem.dir/main.c.o -c /tmp/tmp.KsxX6Zwsat/main.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.Nt5AxrMpRD/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Building C object CMakeFiles/pos_sem.dir/main.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/pos_sem.dir/main.c.o -c /tmp/tmp.Nt5AxrMpRD/main.c
 
 CMakeFiles/pos_sem.dir/main.c.i: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/pos_sem.dir/main.c.i"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /tmp/tmp.KsxX6Zwsat/main.c > CMakeFiles/pos_sem.dir/main.c.i
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /tmp/tmp.Nt5AxrMpRD/main.c > CMakeFiles/pos_sem.dir/main.c.i
 
 CMakeFiles/pos_sem.dir/main.c.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/pos_sem.dir/main.c.s"
-	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /tmp/tmp.KsxX6Zwsat/main.c -o CMakeFiles/pos_sem.dir/main.c.s
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /tmp/tmp.Nt5AxrMpRD/main.c -o CMakeFiles/pos_sem.dir/main.c.s
+
+CMakeFiles/pos_sem.dir/k_a_t_client.c.o: CMakeFiles/pos_sem.dir/flags.make
+CMakeFiles/pos_sem.dir/k_a_t_client.c.o: ../k_a_t_client.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.Nt5AxrMpRD/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Building C object CMakeFiles/pos_sem.dir/k_a_t_client.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/pos_sem.dir/k_a_t_client.c.o -c /tmp/tmp.Nt5AxrMpRD/k_a_t_client.c
+
+CMakeFiles/pos_sem.dir/k_a_t_client.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/pos_sem.dir/k_a_t_client.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /tmp/tmp.Nt5AxrMpRD/k_a_t_client.c > CMakeFiles/pos_sem.dir/k_a_t_client.c.i
+
+CMakeFiles/pos_sem.dir/k_a_t_client.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/pos_sem.dir/k_a_t_client.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /tmp/tmp.Nt5AxrMpRD/k_a_t_client.c -o CMakeFiles/pos_sem.dir/k_a_t_client.c.s
+
+CMakeFiles/pos_sem.dir/k_a_t_server.c.o: CMakeFiles/pos_sem.dir/flags.make
+CMakeFiles/pos_sem.dir/k_a_t_server.c.o: ../k_a_t_server.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.Nt5AxrMpRD/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Building C object CMakeFiles/pos_sem.dir/k_a_t_server.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/pos_sem.dir/k_a_t_server.c.o -c /tmp/tmp.Nt5AxrMpRD/k_a_t_server.c
+
+CMakeFiles/pos_sem.dir/k_a_t_server.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/pos_sem.dir/k_a_t_server.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /tmp/tmp.Nt5AxrMpRD/k_a_t_server.c > CMakeFiles/pos_sem.dir/k_a_t_server.c.i
+
+CMakeFiles/pos_sem.dir/k_a_t_server.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/pos_sem.dir/k_a_t_server.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /tmp/tmp.Nt5AxrMpRD/k_a_t_server.c -o CMakeFiles/pos_sem.dir/k_a_t_server.c.s
+
+CMakeFiles/pos_sem.dir/k_a_t_definitions.c.o: CMakeFiles/pos_sem.dir/flags.make
+CMakeFiles/pos_sem.dir/k_a_t_definitions.c.o: ../k_a_t_definitions.c
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --progress-dir=/tmp/tmp.Nt5AxrMpRD/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building C object CMakeFiles/pos_sem.dir/k_a_t_definitions.c.o"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -o CMakeFiles/pos_sem.dir/k_a_t_definitions.c.o -c /tmp/tmp.Nt5AxrMpRD/k_a_t_definitions.c
+
+CMakeFiles/pos_sem.dir/k_a_t_definitions.c.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Preprocessing C source to CMakeFiles/pos_sem.dir/k_a_t_definitions.c.i"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -E /tmp/tmp.Nt5AxrMpRD/k_a_t_definitions.c > CMakeFiles/pos_sem.dir/k_a_t_definitions.c.i
+
+CMakeFiles/pos_sem.dir/k_a_t_definitions.c.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green "Compiling C source to assembly CMakeFiles/pos_sem.dir/k_a_t_definitions.c.s"
+	/usr/bin/cc $(C_DEFINES) $(C_INCLUDES) $(C_FLAGS) -S /tmp/tmp.Nt5AxrMpRD/k_a_t_definitions.c -o CMakeFiles/pos_sem.dir/k_a_t_definitions.c.s
 
 # Object files for target pos_sem
 pos_sem_OBJECTS = \
-"CMakeFiles/pos_sem.dir/main.c.o"
+"CMakeFiles/pos_sem.dir/main.c.o" \
+"CMakeFiles/pos_sem.dir/k_a_t_client.c.o" \
+"CMakeFiles/pos_sem.dir/k_a_t_server.c.o" \
+"CMakeFiles/pos_sem.dir/k_a_t_definitions.c.o"
 
 # External object files for target pos_sem
 pos_sem_EXTERNAL_OBJECTS =
 
 pos_sem: CMakeFiles/pos_sem.dir/main.c.o
+pos_sem: CMakeFiles/pos_sem.dir/k_a_t_client.c.o
+pos_sem: CMakeFiles/pos_sem.dir/k_a_t_server.c.o
+pos_sem: CMakeFiles/pos_sem.dir/k_a_t_definitions.c.o
 pos_sem: CMakeFiles/pos_sem.dir/build.make
 pos_sem: CMakeFiles/pos_sem.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/tmp/tmp.KsxX6Zwsat/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Linking C executable pos_sem"
+	@$(CMAKE_COMMAND) -E cmake_echo_color --switch=$(COLOR) --green --bold --progress-dir=/tmp/tmp.Nt5AxrMpRD/cmake-build-debug/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Linking C executable pos_sem"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/pos_sem.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.
@@ -112,6 +157,6 @@ CMakeFiles/pos_sem.dir/clean:
 .PHONY : CMakeFiles/pos_sem.dir/clean
 
 CMakeFiles/pos_sem.dir/depend:
-	cd /tmp/tmp.KsxX6Zwsat/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /tmp/tmp.KsxX6Zwsat /tmp/tmp.KsxX6Zwsat /tmp/tmp.KsxX6Zwsat/cmake-build-debug /tmp/tmp.KsxX6Zwsat/cmake-build-debug /tmp/tmp.KsxX6Zwsat/cmake-build-debug/CMakeFiles/pos_sem.dir/DependInfo.cmake --color=$(COLOR)
+	cd /tmp/tmp.Nt5AxrMpRD/cmake-build-debug && $(CMAKE_COMMAND) -E cmake_depends "Unix Makefiles" /tmp/tmp.Nt5AxrMpRD /tmp/tmp.Nt5AxrMpRD /tmp/tmp.Nt5AxrMpRD/cmake-build-debug /tmp/tmp.Nt5AxrMpRD/cmake-build-debug /tmp/tmp.Nt5AxrMpRD/cmake-build-debug/CMakeFiles/pos_sem.dir/DependInfo.cmake --color=$(COLOR)
 .PHONY : CMakeFiles/pos_sem.dir/depend
 

@@ -1,24 +1,23 @@
-#include "k_s_server.h"
-#include "k_s_definitions.h"
+#include "k_a_t_definitions.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <ctype.h>
 
 #include <sys/socket.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <pthread.h>
 
-int server_main(int argc, char** argv) {
-    if (argc < 1) {
-        printError("Sever je nutne spustit s nasledujucimi argumentmi: port.");
+int server_main(int argc, char* argv[]) {
+    if (argc < 2) {
+        printError("Sever je nutne spustit s nasledujucimi argumentmi: port pouzivatel.");
     }
     int port = atoi(argv[0]);
 	if (port <= 0) {
 		printError("Port musi byt cele cislo vacsie ako 0.");
 	}
-
+    char *userName = argv[1];
+    
     //vytvorenie TCP socketu <sys/socket.h>
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket < 0) {
@@ -32,7 +31,7 @@ int server_main(int argc, char** argv) {
     serverAddress.sin_port = htons(port);       //nastavenie portu
     
     //prepojenie adresy servera so socketom <sys/socket.h>
-    if (bind(serverSocket, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) < 0) {
+    if (bind(serverSocket, (struct sockaddr *)&serverAddress, sizeof(serverAddress)) < 0) {
         printError("Chyba - bind.");
     }
     
@@ -49,22 +48,22 @@ int server_main(int argc, char** argv) {
     if (clientSocket < 0) {
         printError("Chyba - accept.");        
     }
-
-    //inicializacia dat zdielanych medzi vlaknami
+ 
+	//inicializacia dat zdielanych medzi vlaknami
     DATA data;
-    data_init(&data, userName, clientSocket);
-
-    //vytvorenie vlakna pre zapisovanie dat do socketu <pthread.h>
+	data_init(&data, userName, clientSocket);
+	
+	//vytvorenie vlakna pre zapisovanie dat do socketu <pthread.h>
     pthread_t thread;
     pthread_create(&thread, NULL, data_writeData, (void *)&data);
 
-    //v hlavnom vlakne sa bude vykonavat citanie dat zo socketu
-    data_readData((void *)&data);
+	//v hlavnom vlakne sa bude vykonavat citanie dat zo socketu
+	data_readData((void *)&data);
 
-    //pockame na skoncenie zapisovacieho vlakna <pthread.h>
-    pthread_join(thread, NULL);
-    data_destroy(&data);
-
+	//pockame na skoncenie zapisovacieho vlakna <pthread.h>
+	pthread_join(thread, NULL);
+	data_destroy(&data);
+	
     //uzavretie socketu klienta <unistd.h>
     close(clientSocket);
     

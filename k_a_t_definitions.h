@@ -1,10 +1,13 @@
 #ifndef K_DEFINITIONS_H
 #define	K_DEFINITIONS_H
 
+#include <pthread.h>
+
 #ifdef	__cplusplus
 extern "C" {
 #endif
 
+#define USER_LENGTH 10
 #define BUFFER_LENGTH 300
 extern char *endMsg;
 
