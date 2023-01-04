@@ -75,16 +75,16 @@ void *data_readData(void *data) {
 
 void *data_writeData(void *data) {
     DATA *pdata = (DATA *)data;
+    initscr();
 
+    cbreak();
+    noecho();
+    nodelay(stdscr, TRUE);
+    keypad(stdscr, TRUE);
+    scrollok(stdscr, TRUE);
     while(!data_isStopped(pdata)) {
         int ch;
-        initscr();
 
-        cbreak();
-        noecho();
-        nodelay(stdscr, TRUE);
-        keypad(stdscr, TRUE);
-        scrollok(stdscr, TRUE);
         if (kbhit()) {
             ch = getch();
             refresh();
@@ -118,6 +118,8 @@ void *data_writeData(void *data) {
             data_stop(pdata);
         }
     }
+
+    endwin();
 
     /*char buffer[BUFFER_LENGTH + 1];
 	buffer[BUFFER_LENGTH] = '\0';
