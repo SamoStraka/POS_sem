@@ -42,7 +42,7 @@ void *data_readData(void *data) {
     while(!data_isStopped(pdata)) {
         if (read(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong)) > 0) {
             printf("Nacitanie!\n");
-            vypis(pdata->dataPong);
+            vypisHru(pdata->dataPong);
         } else {
             data_stop(pdata);
         }
@@ -147,6 +147,23 @@ void vypis(DATAPONG dataPong) {
     printf("lopticka: \tx: %d \ty: %d\n", dataPong.lopticka.posX, dataPong.lopticka.posY);
     printf("server: \ty: %d\n", dataPong.server.posY);
     printf("klient: \ty: %d\n", dataPong.klient.posY);
+}
+
+void vypisHru(DATAPONG dataPong) {
+    for (int i = 0; i < 20; ++i) {
+        for (int j = 0; j < 10; ++j) {
+            if(i == 0 && dataPong.server.posY == j){
+                printf("|");
+            } else if(i == 0 && dataPong.klient.posY == j){
+                printf("|");
+            }else if(dataPong.lopticka.posX == i && dataPong.lopticka.posY == j){
+                printf("|");
+            } else {
+                printf(" ");
+            }
+        }
+        printf("\n");
+    }
 }
 
 void printError(char *str) {

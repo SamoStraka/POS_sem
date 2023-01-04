@@ -38,6 +38,7 @@ int data_isStopped(DATA *data);
 void *data_readData(void *data);
 void *data_writeData(void *data);
 void vypis(DATAPONG dataPong);
+void vypisHru(DATAPONG dataPong);
 
 void printError(char *str);
 
