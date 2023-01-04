@@ -12,7 +12,7 @@
 int velkostPolaX = 20;
 int velkostPolaY = 10;
 
-char end = KEY_BACKSPACE;
+int end = KEY_BACKSPACE;
 
 void data_init(DATA *data, const int server, const int socket, const DATAPONG dataPong) {
 	data->socket = socket;
@@ -46,7 +46,7 @@ void *data_readData(void *data) {
     while(!data_isStopped(pdata)) {
         if (read(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong)) > 0) {
             printf("Nacitanie!\n");
-            vypis(pdata->dataPong);
+            vypisHru(pdata->dataPong);
         } else {
             data_stop(pdata);
         }
@@ -84,16 +84,14 @@ void *data_writeData(void *data) {
     noecho();
     nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
-    scrollok(stdscr, TRUE);
+    scrollok(stdscr, FALSE);
     while(!data_isStopped(pdata)) {
         int ch;
 
         if (kbhit()) {
             ch = getch();
-            refresh();
         } else {
             ch = getch();
-            refresh();
             sleep(1);
         }
 
@@ -122,6 +120,7 @@ void *data_writeData(void *data) {
         }
         else if(ch == end){
             printf("Koniec hry.\n");
+            endwin();
             data_stop(pdata);
         }
     }
@@ -202,11 +201,19 @@ void *pohyb_lopticka(void *data) {
 }
 
 void vypis(DATAPONG dataPong) {
-    move(10, 30);
-    addch(c)
-    printf("lopticka: \tx: %d \ty: %d\n", dataPong.lopticka.posX, dataPong.lopticka.posY);
-    printf("server: \ty: %d\n", dataPong.server.posY);
-    printf("klient: \ty: %d\n", dataPong.klient.posY);
+    printw("lopticka: \tx: %d \ty: %d\n", dataPong.lopticka.posX, dataPong.lopticka.posY);
+    printw("server: \ty: %d\n", dataPong.server.posY);
+    printw("klient: \ty: %d\n", dataPong.klient.posY);
+}
+
+void vypisHru(DATAPONG dataPong) {
+    clear();
+
+    mvaddch(dataPong.server.posY, 0, '|');
+    mvaddch(dataPong.klient.posY, velkostPolaX, '|');
+    mvaddch(dataPong.lopticka.posY, dataPong.lopticka.posX, '*');
+
+    refresh();
 }
 
 int kbhit(void)
