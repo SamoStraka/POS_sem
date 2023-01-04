@@ -4,11 +4,12 @@
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
+#include <curses.h>
 
 #include <unistd.h>
 #include <fcntl.h>
 
-char end = 'q';
+char end = KEY_BACKSPACE;
 
 void data_init(DATA *data, const int server, const int socket, const DATAPONG dataPong) {
 	data->socket = socket;
@@ -76,18 +77,33 @@ void *data_writeData(void *data) {
     DATA *pdata = (DATA *)data;
 
     while(!data_isStopped(pdata)) {
-        char ch;
-        scanf("%c", &ch);
-        if(ch == 'w' || ch == 's'){
+        int ch;
+        initscr();
+
+        cbreak();
+        noecho();
+        nodelay(stdscr, TRUE);
+        keypad(stdscr, TRUE);
+        scrollok(stdscr, TRUE);
+        if (kbhit()) {
+            ch = getch();
+            refresh();
+        } else {
+            ch = getch();
+            refresh();
+            sleep(1);
+        }
+
+    if(ch == KEY_UP || ch == KEY_DOWN){
             switch (ch) {
-                case 'w':
+                case KEY_UP:
                     if(pdata->server){
                         pdata->dataPong.server.posY++;
                     } else {
                         pdata->dataPong.klient.posY++;
                     }
                     break;
-                case 's':
+                case KEY_DOWN:
                     if(pdata->server){
                         pdata->dataPong.server.posY--;
                     } else {
@@ -147,6 +163,18 @@ void vypis(DATAPONG dataPong) {
     printf("lopticka: \tx: %d \ty: %d\n", dataPong.lopticka.posX, dataPong.lopticka.posY);
     printf("server: \ty: %d\n", dataPong.server.posY);
     printf("klient: \ty: %d\n", dataPong.klient.posY);
+}
+
+int kbhit(void)
+{
+    int ch = getch();
+
+    if (ch != ERR) {
+        ungetch(ch);
+        return 1;
+    } else {
+        return 0;
+    }
 }
 
 void printError(char *str) {
