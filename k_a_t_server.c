@@ -9,19 +9,18 @@
 #include <pthread.h>
 
 int server_main(int argc, char* argv[]) {
-    if (argc < 2) {
-        printError("Sever je nutne spustit s nasledujucimi argumentmi: port pouzivatel.");
+    if (argc < 1) {
+        printError("Sever je nutne spustit s nasledujucimi argumentmi: port.");
     }
     int port = atoi(argv[0]);
 	if (port <= 0) {
 		printError("Port musi byt cele cislo vacsie ako 0.");
 	}
-    char *userName = argv[1];
     
     //vytvorenie TCP socketu <sys/socket.h>
     int serverSocket = socket(AF_INET, SOCK_STREAM, 0);
     if (serverSocket < 0) {
-        printError("Chyba - socket.");        
+        printError("Chyba - socket.");
     }
     
     //definovanie adresy servera <arpa/inet.h>

@@ -10,8 +10,8 @@
 #include <pthread.h>
 
 int klient_main(int argc, char *argv[]) {
-    if (argc < 3) {
-        printError("Klienta je nutne spustit s nasledujucimi argumentmi: adresa port pouzivatel.");
+    if (argc < 2) {
+        printError("Klienta je nutne spustit s nasledujucimi argumentmi: adresa port.");
     }
     
     //ziskanie adresy a portu servera <netdb.h>
@@ -23,7 +23,6 @@ int klient_main(int argc, char *argv[]) {
 	if (port <= 0) {
 		printError("Port musi byt cele cislo vacsie ako 0.");
 	}
-    char *userName = argv[2];
     
     //vytvorenie socketu <sys/socket.h>
     int sock = socket(AF_INET, SOCK_STREAM, 0);
