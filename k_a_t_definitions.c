@@ -8,21 +8,13 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-char *endMsg = ":end";
+char end = 'q';
 
-void data_init(DATA *data, const char* userName, const int socket) {
+void data_init(DATA *data, const int server, const int socket, const DATAPONG dataPong) {
 	data->socket = socket;
 	data->stop = 0;
-	data->userName[USER_LENGTH] = '\0';
-
-    data->datapong->lopticka.posX = 0;
-    data->datapong->lopticka.posY = 0;
-    data->datapong->server.posY = 0;
-    data->datapong->server.body = 0;
-    data->datapong->klient.posY = 0;
-    data->datapong->klient.body = 0;
-
-	strncpy(data->userName, userName, USER_LENGTH);
+	data->server = server;
+    data->dataPong = dataPong;
 	pthread_mutex_init(&data->mutex, NULL);
 }
 
@@ -46,7 +38,17 @@ int data_isStopped(DATA *data) {
 
 void *data_readData(void *data) {    
     DATA *pdata = (DATA *)data;
-    char buffer[BUFFER_LENGTH + 1];
+
+    while(!data_isStopped(pdata)) {
+        if (read(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong)) > 0) {
+            printf("Nacitanie!\n");
+            vypis(pdata->dataPong);
+        } else {
+            data_stop(pdata);
+        }
+    }
+
+    /*char buffer[BUFFER_LENGTH + 1];
 	buffer[BUFFER_LENGTH] = '\0';
     while(!data_isStopped(pdata)) {
 		bzero(buffer, BUFFER_LENGTH);
@@ -65,14 +67,43 @@ void *data_readData(void *data) {
 		else {
 			data_stop(pdata);
 		}
-	}
+	}*/
 	
 	return NULL;
 }
 
-void *data_writeData(void *data) {    
+void *data_writeData(void *data) {
     DATA *pdata = (DATA *)data;
-    char buffer[BUFFER_LENGTH + 1];
+
+    while(!data_isStopped(pdata)) {
+        char ch;
+        scanf("%c", &ch);
+        if(ch == 'w' || ch == 's'){
+            switch (ch) {
+                case 'w':
+                    if(pdata->server){
+                        pdata->dataPong.server.posY++;
+                    } else {
+                        pdata->dataPong.klient.posY++;
+                    }
+                    break;
+                case 's':
+                    if(pdata->server){
+                        pdata->dataPong.server.posY--;
+                    } else {
+                        pdata->dataPong.klient.posY--;
+                    }
+                    break;
+            }
+            write(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong));
+        }
+        else if(ch == end){
+            printf("Koniec hry.\n");
+            data_stop(pdata);
+        }
+    }
+
+    /*char buffer[BUFFER_LENGTH + 1];
 	buffer[BUFFER_LENGTH] = '\0';
 	int userNameLength = strlen(pdata->userName);
 
@@ -94,6 +125,10 @@ void *data_writeData(void *data) {
 				if (pos != NULL) {
 					*pos = '\0';
 				}
+
+                int ch = getchar();
+                printf("Received Input: %c\n", ch);
+
 				write(pdata->socket, buffer, strlen(buffer) + 1);
 				
 				if (strstr(textStart, endMsg) == textStart && strlen(textStart) == strlen(endMsg)) {
@@ -103,9 +138,15 @@ void *data_writeData(void *data) {
 			}
         }
     }
-	fcntl(STDIN_FILENO, F_SETFL, fcntl(STDIN_FILENO, F_GETFL, 0) & ~O_NONBLOCK);
+	fcntl(STDIN_FILENO, F_SETFL, fcntl(STDIN_FILENO, F_GETFL, 0) & ~O_NONBLOCK);*/
 	
 	return NULL;
+}
+
+void vypis(DATAPONG dataPong) {
+    printf("lopticka: \tx: %d \ty: %d\n", dataPong.lopticka.posX, dataPong.lopticka.posY);
+    printf("server: \ty: %d\n", dataPong.server.posY);
+    printf("klient: \ty: %d\n", dataPong.klient.posY);
 }
 
 void printError(char *str) {

@@ -51,7 +51,8 @@ int server_main(int argc, char* argv[]) {
  
 	//inicializacia dat zdielanych medzi vlaknami
     DATA data;
-	data_init(&data, userName, clientSocket);
+    DATAPONG dataPong = {0, 0, 0, 0, 0, 0};
+	data_init(&data, 1, clientSocket, dataPong);
 	
 	//vytvorenie vlakna pre zapisovanie dat do socketu <pthread.h>
     pthread_t thread;
