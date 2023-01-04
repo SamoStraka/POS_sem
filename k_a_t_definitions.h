@@ -7,9 +7,14 @@
 extern "C" {
 #endif
 
+extern int velkostPolaX;
+extern int velkostPolaY;
+
 typedef struct lopticka {
     int posX;
     int posY;
+    int movX;
+    int movY;
 } LOPTICKA;
 
 typedef struct hrac {
@@ -37,6 +42,7 @@ void data_stop(DATA *data);
 int data_isStopped(DATA *data);
 void *data_readData(void *data);
 void *data_writeData(void *data);
+void *pohyb_lopticka(void *data);
 void vypis(DATAPONG dataPong);
 int kbhit(void);
 void vypisHru(DATAPONG dataPong);

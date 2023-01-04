@@ -43,7 +43,7 @@ int klient_main(int argc, char *argv[]) {
     
 	//inicializacia dat zdielanych medzi vlaknami
     DATA data;
-    DATAPONG dataPong = {0, 0, 0, 0, 0, 0};
+    DATAPONG dataPong = {velkostPolaX / 2, velkostPolaY / 2, 1, 1, velkostPolaY / 2, 0, velkostPolaY / 2, 0};
 	data_init(&data, 0, sock, dataPong);
 	
 	//vytvorenie vlakna pre zapisovanie dat do socketu <pthread.h>

@@ -50,15 +50,22 @@ int server_main(int argc, char* argv[]) {
  
 	//inicializacia dat zdielanych medzi vlaknami
     DATA data;
-    DATAPONG dataPong = {0, 0, 0, 0, 0, 0};
+    DATAPONG dataPong = {velkostPolaX / 2, velkostPolaY / 2, 1, 1, velkostPolaY / 2, 0, velkostPolaY / 2, 0};
 	data_init(&data, 1, clientSocket, dataPong);
 	
 	//vytvorenie vlakna pre zapisovanie dat do socketu <pthread.h>
     pthread_t thread;
     pthread_create(&thread, NULL, data_writeData, (void *)&data);
 
+    //vytvorenie vlakna pre pohyb lopticky
+    pthread_t thread_lopticka;
+    pthread_create(&thread_lopticka, NULL, pohyb_lopticka, (void *)&data);
+
 	//v hlavnom vlakne sa bude vykonavat citanie dat zo socketu
 	data_readData((void *)&data);
+
+    //pockame na skoncenie vlakna pre pohyb lopticky
+    pthread_join(thread_lopticka, NULL);
 
 	//pockame na skoncenie zapisovacieho vlakna <pthread.h>
 	pthread_join(thread, NULL);

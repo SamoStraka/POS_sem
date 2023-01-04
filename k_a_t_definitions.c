@@ -9,6 +9,9 @@
 #include <unistd.h>
 #include <fcntl.h>
 
+int velkostPolaX = 20;
+int velkostPolaY = 10;
+
 char end = KEY_BACKSPACE;
 
 void data_init(DATA *data, const int server, const int socket, const DATAPONG dataPong) {
@@ -98,16 +101,20 @@ void *data_writeData(void *data) {
             switch (ch) {
                 case KEY_UP:
                     if(pdata->server){
-                        pdata->dataPong.server.posY++;
+                        if(pdata->dataPong.server.posY < velkostPolaY - 1)
+                            pdata->dataPong.server.posY++;
                     } else {
-                        pdata->dataPong.klient.posY++;
+                        if(pdata->dataPong.klient.posY < velkostPolaY - 1)
+                            pdata->dataPong.klient.posY++;
                     }
                     break;
                 case KEY_DOWN:
                     if(pdata->server){
-                        pdata->dataPong.server.posY--;
+                        if(pdata->dataPong.server.posY > 0)
+                            pdata->dataPong.server.posY--;
                     } else {
-                        pdata->dataPong.klient.posY--;
+                        if(pdata->dataPong.klient.posY > 0)
+                            pdata->dataPong.klient.posY--;
                     }
                     break;
             }
@@ -161,7 +168,42 @@ void *data_writeData(void *data) {
 	return NULL;
 }
 
+void *pohyb_lopticka(void *data) {
+    DATA *pdata = (DATA *)data;
+
+    while(!data_isStopped(pdata)) {
+        usleep(900000);
+
+        //pohyb
+        pdata->dataPong.lopticka.posY += pdata->dataPong.lopticka.movY;
+        pdata->dataPong.lopticka.posX += pdata->dataPong.lopticka.movX;
+
+        //odraz od steny
+        if(pdata->dataPong.lopticka.posY > velkostPolaY - 1 || pdata->dataPong.lopticka.posY < 0)
+            pdata->dataPong.lopticka.posY -= pdata->dataPong.lopticka.posY;
+
+        //naraz do steny
+        if(pdata->dataPong.lopticka.posX >= velkostPolaX - 1){
+            pdata->dataPong.server.body++;
+            //reset lopticky
+            pdata->dataPong.lopticka.posY = velkostPolaY / 2;
+            pdata->dataPong.lopticka.posX = velkostPolaX / 2;
+        }
+        if(pdata->dataPong.lopticka.posX <= 0) {
+            pdata->dataPong.klient.body++;
+            //reset lopticky
+            pdata->dataPong.lopticka.posY = velkostPolaY / 2;
+            pdata->dataPong.lopticka.posX = velkostPolaX / 2;
+        }
+
+        write(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong));
+    }
+    return NULL;
+}
+
 void vypis(DATAPONG dataPong) {
+    move(10, 30);
+    addch(c)
     printf("lopticka: \tx: %d \ty: %d\n", dataPong.lopticka.posX, dataPong.lopticka.posY);
     printf("server: \ty: %d\n", dataPong.server.posY);
     printf("klient: \ty: %d\n", dataPong.klient.posY);
