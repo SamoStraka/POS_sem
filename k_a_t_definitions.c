@@ -9,21 +9,21 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-int velkostPolaX = 20;
-int velkostPolaY = 10;
+int velkostPolaX = 21;
+int velkostPolaY = 7;
 
 int end = KEY_BACKSPACE;
 
 void data_init(DATA *data, const int server, const int socket, const DATAPONG dataPong) {
-	data->socket = socket;
-	data->stop = 0;
-	data->server = server;
+    data->socket = socket;
+    data->stop = 0;
+    data->server = server;
     data->dataPong = dataPong;
-	pthread_mutex_init(&data->mutex, NULL);
+    pthread_mutex_init(&data->mutex, NULL);
 }
 
 void data_destroy(DATA *data) {
-	pthread_mutex_destroy(&data->mutex);
+    pthread_mutex_destroy(&data->mutex);
 }
 
 void data_stop(DATA *data) {
@@ -40,12 +40,11 @@ int data_isStopped(DATA *data) {
     return stop;
 }
 
-void *data_readData(void *data) {    
-    DATA *pdata = (DATA *)data;
+void *data_readData(void *data) {
+    DATA *pdata = (DATA *) data;
 
-    while(!data_isStopped(pdata)) {
+    while (!data_isStopped(pdata)) {
         if (read(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong)) > 0) {
-            printf("Nacitanie!\n");
             vypisHru(pdata->dataPong);
         } else {
             data_stop(pdata);
@@ -72,12 +71,12 @@ void *data_readData(void *data) {
 			data_stop(pdata);
 		}
 	}*/
-	
-	return NULL;
+
+    return NULL;
 }
 
 void *data_writeData(void *data) {
-    DATA *pdata = (DATA *)data;
+    DATA *pdata = (DATA *) data;
     initscr();
 
     cbreak();
@@ -85,7 +84,7 @@ void *data_writeData(void *data) {
     nodelay(stdscr, TRUE);
     keypad(stdscr, TRUE);
     scrollok(stdscr, FALSE);
-    while(!data_isStopped(pdata)) {
+    while (!data_isStopped(pdata)) {
         int ch;
 
         if (kbhit()) {
@@ -95,82 +94,68 @@ void *data_writeData(void *data) {
             sleep(1);
         }
 
-    if(ch == KEY_UP || ch == KEY_DOWN){
+        if (ch == KEY_UP || ch == KEY_DOWN) {
             switch (ch) {
                 case KEY_UP:
-                    if(pdata->server){
-                        if(pdata->dataPong.server.posY < velkostPolaY - 1)
-                            pdata->dataPong.server.posY++;
+                    if (pdata->server) {
+                        if (pdata->dataPong.server.posY > 0)
+                            pdata->dataPong.server.posY--;
                     } else {
-                        if(pdata->dataPong.klient.posY < velkostPolaY - 1)
-                            pdata->dataPong.klient.posY++;
+                        if (pdata->dataPong.klient.posY > 0)
+                            pdata->dataPong.klient.posY--;
                     }
                     break;
                 case KEY_DOWN:
-                    if(pdata->server){
-                        if(pdata->dataPong.server.posY > 0)
-                            pdata->dataPong.server.posY--;
+                    if (pdata->server) {
+                        if (pdata->dataPong.server.posY < velkostPolaY - 1)
+                            pdata->dataPong.server.posY++;
                     } else {
-                        if(pdata->dataPong.klient.posY > 0)
-                            pdata->dataPong.klient.posY--;
+                        if (pdata->dataPong.klient.posY < velkostPolaY - 1)
+                            pdata->dataPong.klient.posY++;
                     }
                     break;
             }
             write(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong));
-        }
-        else if(ch == end){
-            printf("Koniec hry.\n");
-            endwin();
+            vypisHru(pdata->dataPong);
+        } else if (ch == end) {
             data_stop(pdata);
         }
     }
 
     endwin();
 
-    /*char buffer[BUFFER_LENGTH + 1];
-	buffer[BUFFER_LENGTH] = '\0';
-	int userNameLength = strlen(pdata->userName);
+    return NULL;
+}
 
-	//pre pripad, ze chceme poslat viac dat, ako je kapacita buffra
-	fcntl(STDIN_FILENO, F_SETFL, fcntl(STDIN_FILENO, F_GETFL, 0) | O_NONBLOCK);
-	fd_set inputs;
-    FD_ZERO(&inputs);
-	struct timeval tv;
-	tv.tv_usec = 0;
-    while(!data_isStopped(pdata)) {
-		tv.tv_sec = 1;
-		FD_SET(STDIN_FILENO, &inputs);
-		select(STDIN_FILENO + 1, &inputs, NULL, NULL, &tv);
-		if (FD_ISSET(STDIN_FILENO, &inputs)) {
-			sprintf(buffer, "%s: ", pdata->userName);
-			char *textStart = buffer + (userNameLength + 2);
-			while (fgets(textStart, BUFFER_LENGTH - (userNameLength + 2), stdin) > 0) {
-				char *pos = strchr(textStart, '\n');
-				if (pos != NULL) {
-					*pos = '\0';
-				}
+void reset_lopticka(DATAPONG* dataPong){
+    dataPong->lopticka.posY = velkostPolaY / 2;
+    dataPong->lopticka.posX = velkostPolaX / 2;
 
-                int ch = getchar();
-                printf("Received Input: %c\n", ch);
-
-				write(pdata->socket, buffer, strlen(buffer) + 1);
-				
-				if (strstr(textStart, endMsg) == textStart && strlen(textStart) == strlen(endMsg)) {
-					printf("Koniec komunikacie.\n");
-					data_stop(pdata);
-				}
-			}
-        }
+    switch (rand() % 4) {
+        case 0:
+            dataPong->lopticka.movY = 1;
+            dataPong->lopticka.movX = 1;
+            break;
+        case 1:
+            dataPong->lopticka.movY = 1;
+            dataPong->lopticka.movX = -1;
+            break;
+        case 2:
+            dataPong->lopticka.movY = -1;
+            dataPong->lopticka.movX = 1;
+            break;
+        case 3:
+            dataPong->lopticka.movY = -1;
+            dataPong->lopticka.movX = -1;
+            break;
     }
-	fcntl(STDIN_FILENO, F_SETFL, fcntl(STDIN_FILENO, F_GETFL, 0) & ~O_NONBLOCK);*/
-	
-	return NULL;
+
 }
 
 void *pohyb_lopticka(void *data) {
-    DATA *pdata = (DATA *)data;
+    DATA *pdata = (DATA *) data;
 
-    while(!data_isStopped(pdata)) {
+    while (!data_isStopped(pdata)) {
         usleep(900000);
 
         //pohyb
@@ -178,24 +163,30 @@ void *pohyb_lopticka(void *data) {
         pdata->dataPong.lopticka.posX += pdata->dataPong.lopticka.movX;
 
         //odraz od steny
-        if(pdata->dataPong.lopticka.posY > velkostPolaY - 1 || pdata->dataPong.lopticka.posY < 0)
-            pdata->dataPong.lopticka.posY -= pdata->dataPong.lopticka.posY;
+        if (pdata->dataPong.lopticka.posY >= velkostPolaY - 1 || pdata->dataPong.lopticka.posY <= 0)
+            pdata->dataPong.lopticka.movY = -pdata->dataPong.lopticka.movY;
 
         //naraz do steny
-        if(pdata->dataPong.lopticka.posX >= velkostPolaX - 1){
-            pdata->dataPong.server.body++;
-            //reset lopticky
-            pdata->dataPong.lopticka.posY = velkostPolaY / 2;
-            pdata->dataPong.lopticka.posX = velkostPolaX / 2;
+        if (pdata->dataPong.lopticka.posX >= velkostPolaX - 2) {
+            if(pdata->dataPong.lopticka.posY == pdata->dataPong.klient.posY){
+                pdata->dataPong.lopticka.movX = -pdata->dataPong.lopticka.movX;
+            } else {
+                pdata->dataPong.server.body++;
+                reset_lopticka(&pdata->dataPong);
+            }
         }
-        if(pdata->dataPong.lopticka.posX <= 0) {
-            pdata->dataPong.klient.body++;
-            //reset lopticky
-            pdata->dataPong.lopticka.posY = velkostPolaY / 2;
-            pdata->dataPong.lopticka.posX = velkostPolaX / 2;
+        if (pdata->dataPong.lopticka.posX <= 1) {
+            if(pdata->dataPong.lopticka.posY == pdata->dataPong.server.posY){
+                pdata->dataPong.lopticka.movX = -pdata->dataPong.lopticka.movX;
+            } else {
+                pdata->dataPong.klient.body++;
+                reset_lopticka(&pdata->dataPong);
+            }
         }
 
         write(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong));
+
+        vypisHru(pdata->dataPong);
     }
     return NULL;
 }
@@ -206,18 +197,40 @@ void vypis(DATAPONG dataPong) {
     printw("klient: \ty: %d\n", dataPong.klient.posY);
 }
 
+void rectangle(int y1, int x1, int y2, int x2)
+{
+    mvhline(y1, x1, 0, x2-x1);
+    mvhline(y2, x1, 0, x2-x1);
+    mvvline(y1, x1, 0, y2-y1);
+    mvvline(y1, x2, 0, y2-y1);
+    mvaddch(y1, x1, ACS_ULCORNER);
+    mvaddch(y2, x1, ACS_LLCORNER);
+    mvaddch(y1, x2, ACS_URCORNER);
+    mvaddch(y2, x2, ACS_LRCORNER);
+}
+
+void vypisSkore(DATAPONG dataPong){
+    char str[24];
+    sprintf(str, "Server  %d : %d  Klient", dataPong.server.body, dataPong.klient.body);
+
+    mvaddstr(velkostPolaY + 2, (velkostPolaX / 2) - (strlen(str) / 2), str);
+}
+
 void vypisHru(DATAPONG dataPong) {
     clear();
 
-    mvaddch(dataPong.server.posY, 0, '|');
-    mvaddch(dataPong.klient.posY, velkostPolaX, '|');
-    mvaddch(dataPong.lopticka.posY, dataPong.lopticka.posX, '*');
+    rectangle(0, 0, velkostPolaY + 1, velkostPolaX + 1);
+
+    mvaddch(dataPong.server.posY + 1, 1, '|');
+    mvaddch(dataPong.klient.posY + 1, velkostPolaX, '|');
+    mvaddch(dataPong.lopticka.posY + 1, dataPong.lopticka.posX + 1, '*');
+
+    vypisSkore(dataPong);
 
     refresh();
 }
 
-int kbhit(void)
-{
+int kbhit(void) {
     int ch = getch();
 
     if (ch != ERR) {
@@ -230,10 +243,9 @@ int kbhit(void)
 
 void printError(char *str) {
     if (errno != 0) {
-		perror(str);
-	}
-	else {
-		fprintf(stderr, "%s\n", str);
-	}
+        perror(str);
+    } else {
+        fprintf(stderr, "%s\n", str);
+    }
     exit(EXIT_FAILURE);
 }
