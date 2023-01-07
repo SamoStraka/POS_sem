@@ -97,13 +97,10 @@ void *data_writeData(void *data) {
             write(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong));
             vypisHru(pdata->dataPong);
         } else if (ch == end) {
-            endwin();
             data_stop(pdata);
         }
     }
-
     endwin();
-
     return NULL;
 }
 
@@ -167,7 +164,6 @@ void *pohyb_lopticka(void *data) {
 
         vypisHru(pdata->dataPong);
     }
-    endwin();
     return NULL;
 }
 
@@ -202,6 +198,20 @@ void vypisHru(DATAPONG dataPong) {
     vypisSkore(dataPong);
 
     refresh();
+}
+
+void vypisKoniec(DATA *data) {
+    printf("Komunikácia bola ukončená\n");
+    if (data->dataPong.klient.body > data->dataPong.server.body) {
+        printf("\tSERVER\t%d : %d\tKLIENT\n",data->dataPong.server.body, data->dataPong.klient.body);
+        printf("Víťazom sa stal klient\n");
+    } else if (data->dataPong.klient.body < data->dataPong.server.body) {
+        printf("\tSERVER\t%d : %d\tKLIENT\n",data->dataPong.server.body, data->dataPong.klient.body);
+        printf("Víťazom sa stal server\n");
+    } else {
+        printf("\tSERVER\t%d : %d\tKLIENT\n",data->dataPong.server.body, data->dataPong.klient.body);
+        printf("Nastala remíza\n", data->dataPong.klient.body);
+    }
 }
 
 int kbhit(void) {

@@ -45,6 +45,7 @@ void *data_writeData(void *data);
 void *pohyb_lopticka(void *data);
 int kbhit(void);
 void vypisHru(DATAPONG dataPong);
+void vypisKoniec(DATA *data);
 
 void printError(char *str);
 

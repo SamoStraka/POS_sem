@@ -9,6 +9,8 @@
 #include <pthread.h>
 #include <stdio.h>
 
+#include <curses.h>
+
 int server_main(int argc, char* argv[]) {
     if (argc < 1) {
         printError("Sever je nutne spustit s nasledujucimi argumentmi: port.");
@@ -69,11 +71,18 @@ int server_main(int argc, char* argv[]) {
     pthread_join(thread_lopticka, NULL);
 
 	//pockame na skoncenie zapisovacieho vlakna <pthread.h>
-	pthread_join(thread, NULL);
-	data_destroy(&data);
-	
+    pthread_join(thread, NULL);
+
     //uzavretie socketu klienta <unistd.h>
     close(clientSocket);
-    
+    //ukoncenie windowu
+    endwin();
+
+    //vypis vysledkov
+    vypisKoniec(&data);
+
+    data_destroy(&data);
+    exit_curses(1);
+
     return (EXIT_SUCCESS);
 }

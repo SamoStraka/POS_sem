@@ -8,6 +8,7 @@
 #include <netdb.h>
 #include <unistd.h>
 #include <pthread.h>
+#include <curses.h>
 
 int klient_main(int argc, char *argv[]) {
     if (argc < 2) {
@@ -55,10 +56,19 @@ int klient_main(int argc, char *argv[]) {
 
 	//pockame na skoncenie zapisovacieho vlakna <pthread.h>
 	pthread_join(thread, NULL);
-	data_destroy(&data);
+
 
     //uzavretie socketu <unistd.h>
     close(sock);
-    
+
+    //ukoncenie windowu
+    endwin();
+
+    //vypis vysledkov
+    vypisKoniec(&data);
+
+    data_destroy(&data);
+    exit_curses(1);
+
     return (EXIT_SUCCESS);
 }
