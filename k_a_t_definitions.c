@@ -7,12 +7,12 @@
 #include <curses.h>
 
 #include <unistd.h>
-#include <fcntl.h>
 
 int velkostPolaX = 21;
 int velkostPolaY = 7;
 
-int end = KEY_BACKSPACE;
+// ESCAPE
+int end = 27;
 
 void data_init(DATA *data, const int server, const int socket, const DATAPONG dataPong) {
     data->socket = socket;
@@ -50,27 +50,6 @@ void *data_readData(void *data) {
             data_stop(pdata);
         }
     }
-
-    /*char buffer[BUFFER_LENGTH + 1];
-	buffer[BUFFER_LENGTH] = '\0';
-    while(!data_isStopped(pdata)) {
-		bzero(buffer, BUFFER_LENGTH);
-		if (read(pdata->socket, buffer, BUFFER_LENGTH) > 0) {
-			char *posSemi = strchr(buffer, ':');
-			char *pos = strstr(posSemi + 1, endMsg);
-			if (pos != NULL && pos - posSemi == 2 && *(pos + strlen(endMsg)) == '\0') {
-				*(pos - 2) = '\0';
-				printf("Pouzivatel %s ukoncil komunikaciu.\n", buffer);
-				data_stop(pdata);
-			}
-			else {
-				printf("%s\n", buffer);
-			}			
-		}
-		else {
-			data_stop(pdata);
-		}
-	}*/
 
     return NULL;
 }
@@ -118,6 +97,7 @@ void *data_writeData(void *data) {
             write(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong));
             vypisHru(pdata->dataPong);
         } else if (ch == end) {
+            endwin();
             data_stop(pdata);
         }
     }
@@ -157,7 +137,6 @@ void *pohyb_lopticka(void *data) {
 
     while (!data_isStopped(pdata)) {
         usleep(900000);
-
         //pohyb
         pdata->dataPong.lopticka.posY += pdata->dataPong.lopticka.movY;
         pdata->dataPong.lopticka.posX += pdata->dataPong.lopticka.movX;
@@ -188,13 +167,8 @@ void *pohyb_lopticka(void *data) {
 
         vypisHru(pdata->dataPong);
     }
+    endwin();
     return NULL;
-}
-
-void vypis(DATAPONG dataPong) {
-    printw("lopticka: \tx: %d \ty: %d\n", dataPong.lopticka.posX, dataPong.lopticka.posY);
-    printw("server: \ty: %d\n", dataPong.server.posY);
-    printw("klient: \ty: %d\n", dataPong.klient.posY);
 }
 
 void rectangle(int y1, int x1, int y2, int x2)
