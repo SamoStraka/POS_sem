@@ -18,6 +18,7 @@ extern "C" {
 
 extern int velkostPolaX;
 extern int velkostPolaY;
+extern int maxSkore;
 extern int end;
 
 typedef struct lopticka {
@@ -59,7 +60,6 @@ void data_init(DATA *data, const int socket, DATAPONG dataPong);
 void data_destroy(DATA *data);
 void data_stop(DATA *data);
 int data_isStopped(DATA *data);
-void data_setDataPong(DATA *data, DATAPONG datapong);
 DATAPONG data_getDataPong(DATA *data);
 void data_setKlientData(DATA *data, KLIENTDATA klientData);
 KLIENTDATA data_getKlientData(DATA *data);

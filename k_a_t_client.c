@@ -103,7 +103,7 @@ void *klient_writeData(void *data) {
             sleep(1);
         }
 
-        if (ch == end) {
+        if (ch == end || pdata->dataPong.server.body >= maxSkore || pdata->dataPong.klient.body >= maxSkore) {
             data_stop(pdata);
         }
 

@@ -40,6 +40,12 @@ int server_main(int argc, char *argv[]) {
         printError("Chyba - accept.");
     }
 
+    int max = 10;
+    printf("Zadaj do víťazný počet bodov:");
+
+    scanf("%d", &max);
+    maxSkore = max;
+
     //inicializacia dat zdielanych medzi vlaknami
     DATA data;
     DATAPONG dataPong = {velkostPolaX / 2, velkostPolaY / 2, 1, 1, velkostPolaY / 2, 0, velkostPolaY / 2, 0};
@@ -115,7 +121,7 @@ void *server_writeData(void *data) {
             sleep(1);
         }
 
-        if (ch == end) {
+        if (ch == end || pdata->dataPong.server.body >= maxSkore || pdata->dataPong.klient.body >= maxSkore) {
             data_stop(pdata);
         }
 

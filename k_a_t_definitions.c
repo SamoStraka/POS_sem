@@ -2,6 +2,7 @@
 
 int velkostPolaX = 21;
 int velkostPolaY = 7;
+int maxSkore = 10;
 int end = 27; //ESC
 
 void data_init(DATA *data, const int socket, DATAPONG dataPong) {
@@ -104,16 +105,16 @@ void vypisHru(DATAPONG dataPong) {
 }
 
 void vypisKoniec(DATAPONG dataPong) {
-    printf("Komunikácia bola ukončená\n");
+    printf("Komunikácia bola ukončená\n\n");
     if (dataPong.klient.body > dataPong.server.body) {
         printf("\tSERVER\t%d : %d\tKLIENT\n", dataPong.server.body, dataPong.klient.body);
-        printf("Víťazom sa stal klient\n");
+        printf("\tVíťazom sa stal klient\n\n");
     } else if (dataPong.klient.body < dataPong.server.body) {
         printf("\tSERVER\t%d : %d\tKLIENT\n", dataPong.server.body, dataPong.klient.body);
-        printf("Víťazom sa stal server\n");
+        printf("\tVíťazom sa stal server\n\n");
     } else {
         printf("\tSERVER\t%d : %d\tKLIENT\n", dataPong.server.body, dataPong.klient.body);
-        printf("Nastala remíza\n", dataPong.klient.body);
+        printf("\tNastala remíza\n\n", dataPong.klient.body);
     }
 }
 
