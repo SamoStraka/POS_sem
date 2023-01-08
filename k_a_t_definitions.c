@@ -1,23 +1,12 @@
 #include "k_a_t_definitions.h"
 
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <errno.h>
-#include <curses.h>
-
-#include <unistd.h>
-
 int velkostPolaX = 21;
 int velkostPolaY = 7;
+int end = 27; //ESC
 
-// ESCAPE
-int end = 27;
-
-void data_init(DATA *data, const int server, const int socket, const DATAPONG dataPong) {
+void data_init(DATA *data, const int socket, DATAPONG dataPong) {
     data->socket = socket;
     data->stop = 0;
-    data->server = server;
     data->dataPong = dataPong;
     pthread_mutex_init(&data->mutex, NULL);
 }
@@ -40,146 +29,66 @@ int data_isStopped(DATA *data) {
     return stop;
 }
 
-void *data_readData(void *data) {
-    DATA *pdata = (DATA *) data;
-
-    while (!data_isStopped(pdata)) {
-        if (read(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong)) > 0) {
-            vypisHru(pdata->dataPong);
-        } else {
-            data_stop(pdata);
-        }
-    }
-
-    return NULL;
+void data_setDataPong(DATA *data, DATAPONG datapong) {
+    pthread_mutex_lock(&data->mutex);
+    data->dataPong = datapong;
+    pthread_mutex_unlock(&data->mutex);
 }
 
-void *data_writeData(void *data) {
-    DATA *pdata = (DATA *) data;
-    initscr();
-
-    cbreak();
-    noecho();
-    nodelay(stdscr, TRUE);
-    keypad(stdscr, TRUE);
-    scrollok(stdscr, FALSE);
-    while (!data_isStopped(pdata)) {
-        int ch;
-
-        if (kbhit()) {
-            ch = getch();
-        } else {
-            ch = getch();
-            sleep(1);
-        }
-
-        if (ch == KEY_UP || ch == KEY_DOWN) {
-            switch (ch) {
-                case KEY_UP:
-                    if (pdata->server) {
-                        if (pdata->dataPong.server.posY > 0)
-                            pdata->dataPong.server.posY--;
-                    } else {
-                        if (pdata->dataPong.klient.posY > 0)
-                            pdata->dataPong.klient.posY--;
-                    }
-                    break;
-                case KEY_DOWN:
-                    if (pdata->server) {
-                        if (pdata->dataPong.server.posY < velkostPolaY - 1)
-                            pdata->dataPong.server.posY++;
-                    } else {
-                        if (pdata->dataPong.klient.posY < velkostPolaY - 1)
-                            pdata->dataPong.klient.posY++;
-                    }
-                    break;
-            }
-            write(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong));
-            vypisHru(pdata->dataPong);
-        } else if (ch == end) {
-            data_stop(pdata);
-        }
-    }
-    endwin();
-    return NULL;
+DATAPONG data_getDataPong(DATA *data) {
+    DATAPONG datapong;
+    pthread_mutex_lock(&data->mutex);
+    datapong = data->dataPong;
+    pthread_mutex_unlock(&data->mutex);
+    return datapong;
 }
 
-void reset_lopticka(DATAPONG* dataPong){
-    dataPong->lopticka.posY = velkostPolaY / 2;
-    dataPong->lopticka.posX = velkostPolaX / 2;
-
-    switch (rand() % 4) {
-        case 0:
-            dataPong->lopticka.movY = 1;
-            dataPong->lopticka.movX = 1;
-            break;
-        case 1:
-            dataPong->lopticka.movY = 1;
-            dataPong->lopticka.movX = -1;
-            break;
-        case 2:
-            dataPong->lopticka.movY = -1;
-            dataPong->lopticka.movX = 1;
-            break;
-        case 3:
-            dataPong->lopticka.movY = -1;
-            dataPong->lopticka.movX = -1;
-            break;
-    }
-
+void data_setKlientData(DATA *data, KLIENTDATA klientData) {
+    pthread_mutex_lock(&data->mutex);
+    data->dataPong.klient.posY = klientData.posY;
+    if (!data->stop)
+        data->stop = klientData.stop;
+    pthread_mutex_unlock(&data->mutex);
 }
 
-void *pohyb_lopticka(void *data) {
-    DATA *pdata = (DATA *) data;
-
-    while (!data_isStopped(pdata)) {
-        usleep(900000);
-        //pohyb
-        pdata->dataPong.lopticka.posY += pdata->dataPong.lopticka.movY;
-        pdata->dataPong.lopticka.posX += pdata->dataPong.lopticka.movX;
-
-        //odraz od steny
-        if (pdata->dataPong.lopticka.posY >= velkostPolaY - 1 || pdata->dataPong.lopticka.posY <= 0)
-            pdata->dataPong.lopticka.movY = -pdata->dataPong.lopticka.movY;
-
-        //naraz do steny
-        if (pdata->dataPong.lopticka.posX >= velkostPolaX - 2) {
-            if(pdata->dataPong.lopticka.posY == pdata->dataPong.klient.posY){
-                pdata->dataPong.lopticka.movX = -pdata->dataPong.lopticka.movX;
-            } else {
-                pdata->dataPong.server.body++;
-                reset_lopticka(&pdata->dataPong);
-            }
-        }
-        if (pdata->dataPong.lopticka.posX <= 1) {
-            if(pdata->dataPong.lopticka.posY == pdata->dataPong.server.posY){
-                pdata->dataPong.lopticka.movX = -pdata->dataPong.lopticka.movX;
-            } else {
-                pdata->dataPong.klient.body++;
-                reset_lopticka(&pdata->dataPong);
-            }
-        }
-
-        write(pdata->socket, &pdata->dataPong, sizeof(pdata->dataPong));
-
-        vypisHru(pdata->dataPong);
-    }
-    return NULL;
+KLIENTDATA data_getKlientData(DATA *data) {
+    KLIENTDATA klientData;
+    pthread_mutex_lock(&data->mutex);
+    klientData.posY = data->dataPong.klient.posY;
+    klientData.stop = data->stop;
+    pthread_mutex_unlock(&data->mutex);
+    return klientData;
 }
 
-void rectangle(int y1, int x1, int y2, int x2)
-{
-    mvhline(y1, x1, 0, x2-x1);
-    mvhline(y2, x1, 0, x2-x1);
-    mvvline(y1, x1, 0, y2-y1);
-    mvvline(y1, x2, 0, y2-y1);
+void data_setServerData(DATA *data, SERVERDATA serverData) {
+    pthread_mutex_lock(&data->mutex);
+    data->dataPong = serverData.dataPong;
+    if (!data->stop)
+        data->stop = serverData.stop;
+    pthread_mutex_unlock(&data->mutex);
+}
+
+SERVERDATA data_getServerData(DATA *data) {
+    SERVERDATA serverData;
+    pthread_mutex_lock(&data->mutex);
+    serverData.dataPong = data->dataPong;
+    serverData.stop = data->stop;
+    pthread_mutex_unlock(&data->mutex);
+    return serverData;
+}
+
+void rectangle(int y1, int x1, int y2, int x2) {
+    mvhline(y1, x1, 0, x2 - x1);
+    mvhline(y2, x1, 0, x2 - x1);
+    mvvline(y1, x1, 0, y2 - y1);
+    mvvline(y1, x2, 0, y2 - y1);
     mvaddch(y1, x1, ACS_ULCORNER);
     mvaddch(y2, x1, ACS_LLCORNER);
     mvaddch(y1, x2, ACS_URCORNER);
     mvaddch(y2, x2, ACS_LRCORNER);
 }
 
-void vypisSkore(DATAPONG dataPong){
+void vypisSkore(DATAPONG dataPong) {
     char str[24];
     sprintf(str, "Server  %d : %d  Klient", dataPong.server.body, dataPong.klient.body);
 
@@ -200,17 +109,17 @@ void vypisHru(DATAPONG dataPong) {
     refresh();
 }
 
-void vypisKoniec(DATA *data) {
+void vypisKoniec(DATAPONG dataPong) {
     printf("Komunikácia bola ukončená\n");
-    if (data->dataPong.klient.body > data->dataPong.server.body) {
-        printf("\tSERVER\t%d : %d\tKLIENT\n",data->dataPong.server.body, data->dataPong.klient.body);
+    if (dataPong.klient.body > dataPong.server.body) {
+        printf("\tSERVER\t%d : %d\tKLIENT\n", dataPong.server.body, dataPong.klient.body);
         printf("Víťazom sa stal klient\n");
-    } else if (data->dataPong.klient.body < data->dataPong.server.body) {
-        printf("\tSERVER\t%d : %d\tKLIENT\n",data->dataPong.server.body, data->dataPong.klient.body);
+    } else if (dataPong.klient.body < dataPong.server.body) {
+        printf("\tSERVER\t%d : %d\tKLIENT\n", dataPong.server.body, dataPong.klient.body);
         printf("Víťazom sa stal server\n");
     } else {
-        printf("\tSERVER\t%d : %d\tKLIENT\n",data->dataPong.server.body, data->dataPong.klient.body);
-        printf("Nastala remíza\n", data->dataPong.klient.body);
+        printf("\tSERVER\t%d : %d\tKLIENT\n", dataPong.server.body, dataPong.klient.body);
+        printf("Nastala remíza\n", dataPong.klient.body);
     }
 }
 

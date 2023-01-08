@@ -1,14 +1,24 @@
 #ifndef K_DEFINITIONS_H
-#define	K_DEFINITIONS_H
+#define K_DEFINITIONS_H
 
 #include <pthread.h>
+#include <stdlib.h>
+#include <string.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <unistd.h>
+#include <stdio.h>
+#include <curses.h>
+#include <netdb.h>
+#include <errno.h>
 
-#ifdef	__cplusplus
+#ifdef    __cplusplus
 extern "C" {
 #endif
 
 extern int velkostPolaX;
 extern int velkostPolaY;
+extern int end;
 
 typedef struct lopticka {
     int posX;
@@ -29,29 +39,44 @@ typedef struct dataPong {
 } DATAPONG;
 
 typedef struct data {
-    int server;
     int socket;
     int stop;
     DATAPONG dataPong;
     pthread_mutex_t mutex;
 } DATA;
 
-void data_init(DATA *data, const int server, const int socket, const DATAPONG dataPong);
+typedef struct klientData {
+    int posY;
+    int stop;
+} KLIENTDATA;
+
+typedef struct serverData {
+    DATAPONG dataPong;
+    int stop;
+} SERVERDATA;
+
+void data_init(DATA *data, const int socket, DATAPONG dataPong);
 void data_destroy(DATA *data);
 void data_stop(DATA *data);
 int data_isStopped(DATA *data);
-void *data_readData(void *data);
-void *data_writeData(void *data);
-void *pohyb_lopticka(void *data);
+void data_setDataPong(DATA *data, DATAPONG datapong);
+DATAPONG data_getDataPong(DATA *data);
+void data_setKlientData(DATA *data, KLIENTDATA klientData);
+KLIENTDATA data_getKlientData(DATA *data);
+void data_setServerData(DATA *data, SERVERDATA serverData);
+SERVERDATA data_getServerData(DATA *data);
+
 int kbhit(void);
+
 void vypisHru(DATAPONG dataPong);
-void vypisKoniec(DATA *data);
+
+void vypisKoniec(DATAPONG dataPong);
 
 void printError(char *str);
 
-#ifdef	__cplusplus
+#ifdef    __cplusplus
 }
 #endif
 
-#endif	/* K_DEFINITIONS_H */
+#endif
 
