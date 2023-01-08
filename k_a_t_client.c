@@ -2,8 +2,6 @@
 
 void data_setServerData(DATA *pData, SERVERDATA data);
 
-KLIENTDATA data_getKlientData(DATA *pData);
-
 int klient_main(int argc, char *argv[]) {
     if (argc < 2) {
         printError("Klienta je nutne spustit s nasledujucimi argumentmi: adresa port.");
