@@ -9,7 +9,7 @@ klient:
 server:
 	./main server 10100
 
-clear:
+clean:
 	rm -f *.o *~ main
 
 .PHONY: all clear
