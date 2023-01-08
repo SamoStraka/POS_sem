@@ -3,11 +3,6 @@
 #include "k_a_t_server.h"
 #include "k_a_t_client.h"
 
-/*
- ../..
- /tmp/tmp.Nt5AxrMpRD/cmake-build-debug/pos_sem
- localhost klient 10258 druhy
- */
 int main(int argc, char** argv) {
     if(argc < 2){
         printf("At least one argument is needed.");
