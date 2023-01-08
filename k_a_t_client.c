@@ -68,7 +68,7 @@ int klient_main(int argc, char *argv[]) {
 
     data_destroy(&data);
 
-    exit_curses(1);
+    exit_curses(0);
 
     return (EXIT_SUCCESS);
 }

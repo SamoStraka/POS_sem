@@ -29,12 +29,6 @@ int data_isStopped(DATA *data) {
     return stop;
 }
 
-void data_setDataPong(DATA *data, DATAPONG datapong) {
-    pthread_mutex_lock(&data->mutex);
-    data->dataPong = datapong;
-    pthread_mutex_unlock(&data->mutex);
-}
-
 DATAPONG data_getDataPong(DATA *data) {
     DATAPONG datapong;
     pthread_mutex_lock(&data->mutex);

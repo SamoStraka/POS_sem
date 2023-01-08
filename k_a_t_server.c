@@ -80,8 +80,7 @@ int server_main(int argc, char *argv[]) {
     vypisKoniec(data.dataPong);
 
     data_destroy(&data);
-
-    exit_curses(1);
+    exit_curses(0);
 
     return (EXIT_SUCCESS);
 }
